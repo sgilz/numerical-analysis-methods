@@ -153,4 +153,4 @@ class ClosedMethods:
             print(data_frame)
 
     def get_function(self):
-        return self.__function.get_function()
+        return self.__function

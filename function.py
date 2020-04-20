@@ -21,3 +21,10 @@ class Function:
 
     def get_function(self):
         return self.__function
+
+    def get_dfn(self, n=1):
+        df = self.__function
+        var = self.__var
+        for _ in range(n):
+            df = diff(df, var)
+        return df
