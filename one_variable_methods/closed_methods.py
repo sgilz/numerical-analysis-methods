@@ -4,7 +4,7 @@ from error import relative
 from function import Function
 
 pd.set_option("max_colwidth", None)
-pd.set_option("precision", 16)
+pd.set_option("display.precision", 16)
 pd.set_option('display.max_columns', 500)
 pd.set_option("display.width", 2000)
 
@@ -22,7 +22,7 @@ class ClosedMethods:
                  relative is set by default.
     '''
     def __init__(self, expr, error = relative):
-        self.function = Function(expr)
+        self.__function = Function(expr)
         self.error = error
 
 
@@ -41,7 +41,7 @@ class ClosedMethods:
         else:
             delta = np.abs(delta) # handling negative values
 
-            fx0 = self.function.eval(x0)
+            fx0 = self.__function.eval(x0)
 
             data = { "x": np.array([x0], dtype=np.float64),
             "f(x)": np.array([fx0], dtype=np.float64) }
@@ -51,7 +51,7 @@ class ClosedMethods:
             else:
                 x1 = x0 + delta
                 count = 1
-                fx1 = self.function.eval(x1)
+                fx1 = self.__function.eval(x1)
 
                 while (fx0 * fx1 > 0) and (count < n):
                     data["x"] = np.append(data["x"], [x1])
@@ -60,7 +60,7 @@ class ClosedMethods:
                     x0 = x1 
                     fx0 = fx1
                     x1 += delta
-                    fx1 = self.function.eval(x1)
+                    fx1 = self.__function.eval(x1)
                     count += 1
 
                 data["x"] = np.append(data["x"], [x1])
@@ -103,15 +103,15 @@ class ClosedMethods:
             "f(xm)": np.array([],dtype=np.float64), 
             "E": np.array([],dtype=np.float64) }
 
-            fxi = self.function.eval(xi)
-            fxs = self.function.eval(xs)
+            fxi = self.__function.eval(xi)
+            fxs = self.__function.eval(xs)
             if fxi == 0:
                 print (f"{xi} is a root")
             elif fxs == 0:
                 print (f"{xs} is a root")
             elif fxi * fxs < 0:
                 xm = np.float64(xi - (fxi * (xs - xi)) / (fxs - fxi)) if false_rule else np.mean(np.array((xi, xs), dtype=np.float64))
-                fxm = self.function.eval(xm)
+                fxm = self.__function.eval(xm)
                 count = 1
                 error = tolerance + 1
 
@@ -130,7 +130,7 @@ class ClosedMethods:
                         fxi = fxm
                     x_aux = xm 
                     xm = np.float64(xi - (fxi * (xs - xi)) / (fxs - fxi)) if false_rule else np.mean(np.array((xi, xs), dtype=np.float64))
-                    fxm = self.function.eval(xm)
+                    fxm = self.__function.eval(xm)
                     error = self.error(xm, x_aux)
                     count += 1
 
@@ -151,3 +151,6 @@ class ClosedMethods:
             data_frame = pd.DataFrame(data, columns=( "xi", "xs", "xm", "f(xm)", "E"), dtype=np.float64)
             data_frame.index.name = "n"
             print(data_frame)
+
+    def get_function(self):
+        return self.__function.get_function()

@@ -5,7 +5,7 @@ from function import Function
 
 
 pd.set_option("max_colwidth", None)
-pd.set_option("precision", 16)
+pd.set_option("display.precision", 16)
 pd.set_option('display.max_columns', 500)
 pd.set_option("display.width", 2000)
 
